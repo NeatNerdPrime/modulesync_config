@@ -4,6 +4,12 @@
   excludes: []
   acceptance_tests: true
   main_branches: ['main', 'master']
+  # Opt-in: set to true in your module's .sync.yml to add a Gitleaks
+  # secret-scanning job. Also set `.gitleaks.toml: {delete: false}` to
+  # receive the baseline allowlist template, or provide your own.
+  gitleaks: false
+.gitleaks.toml:
+  delete: true
 # PDK creates this
 .github/workflows/puppet-lint.yml:
   delete: true

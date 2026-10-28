@@ -69,3 +69,17 @@ jobs:
 <%- end -%>
 <%- end -%>
 <%- end -%>
+<%- if @configs['gitleaks'] -%>
+
+  gitleaks:
+    name: Gitleaks
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Run Gitleaks
+        uses: docker://ghcr.io/gitleaks/gitleaks:latest
+        with:
+          args: detect --source=. --no-banner --redact
+<%- end -%>

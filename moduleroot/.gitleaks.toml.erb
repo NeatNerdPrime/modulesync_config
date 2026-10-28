@@ -1,0 +1,60 @@
+# Managed by modulesync - DO NOT EDIT
+# https://voxpupuli.org/docs/updating-files-managed-with-modulesync/
+#
+# Conservative baseline for gitleaks (https://github.com/gitleaks/gitleaks).
+# It extends gitleaks' default ruleset and only allowlists verified
+# false-positive categories common to Puppet module repositories. It does
+# not blanket-exempt test/spec/example directories, so secrets accidentally
+# committed there are still flagged. Modules may extend or replace this
+# file locally; set `.gitleaks.toml: {unmanaged: true}` in your .sync.yml
+# to manage it yourself instead.
+title = "Voxpupuli Puppet module gitleaks baseline"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Spec and acceptance test fixtures, and facterdb's fact-dump corpus"
+paths = [
+  '''spec/fixtures/.*''',
+  '''spec/acceptance/.*''',
+  '''test/fixtures/.*''',
+  '''facts/.*\.facts$''',
+]
+
+[[allowlists]]
+description = "Vendored dependencies and lock files"
+paths = [
+  '''vendor/.*''',
+  '''Gemfile\.lock''',
+]
+
+[[allowlists]]
+description = "Puppet module metadata and generated checksums"
+paths = [
+  '''metadata\.json''',
+  '''checksums\.json''',
+]
+
+[[allowlists]]
+description = "Hiera eyaml encrypted values (PKCS7 ciphertext, not plaintext secrets)"
+regexes = [
+  '''ENC\[PKCS7,.*\]''',
+]
+
+[[allowlists]]
+description = "GPG key fingerprints used as Puppet apt::key identifiers, not secrets"
+regexes = [
+  '''key\s*=>\s*['"][0-9A-Fa-f]{40}['"]''',
+]
+
+[[allowlists]]
+description = "Documentation and changelog placeholder tokens"
+stopwords = [
+  "PLACEHOLDER",
+  "YOUR_KEY_HERE",
+  "YOUR_API_KEY",
+  "CHANGEME",
+  "EXAMPLE_SECRET",
+  "FIXME",
+]
